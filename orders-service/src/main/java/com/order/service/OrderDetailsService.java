@@ -1,5 +1,16 @@
 package com.order.service;
 
-public interface OrderDetailsService {
+import com.order.models.entity.OrderDetails;
 
+/**
+ * API сервиса для работы с {@link OrderDetails}.
+ */
+public interface OrderDetailsService {
+    /**
+     * Создание деталей заказа.
+     *
+     * @param orderDetails входные параметры для создания заказа
+     *
+     */
+    void saveOrderDetails(OrderDetails orderDetails);
 }
