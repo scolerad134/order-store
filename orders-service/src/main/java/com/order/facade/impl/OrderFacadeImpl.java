@@ -49,6 +49,7 @@ public class OrderFacadeImpl implements OrderFacade {
     public void createOrder(OrderInfoDto orderDto) {
         log.debug("createOrder - start, orderDto = {}", orderDto);
         Order order = orderMapper.toOrder(orderDto);
+        order.setTotalAmount(orderDto.getQuantity() * orderDto.getUnitPrice());
         OrderNumberDto orderNumber = restTemplate.getForObject(numberGenerateServiceUrl, OrderNumberDto.class);
         order.setOrderNumber(orderNumber.getNumber());
         order.setOrderDate(Date.valueOf(orderNumber.getDate()));
