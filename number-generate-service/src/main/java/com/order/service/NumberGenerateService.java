@@ -1,25 +1,18 @@
 package com.order.service;
 
-import com.order.models.OrderNumber;
+import com.order.openapi.model.OrderNumberDto;
 
 import java.sql.Date;
 
 /**
- * API сервиса для работы с {@link OrderNumber}.
+ * API сервиса для работы с {@link OrderNumberDto}.
  */
 public interface NumberGenerateService {
 
     /**
-     * Генерация номера заказа.
+     * Получение данных о заказе.
      *
-     * @return id созданного заказа
+     * @return dto c номером заказа и датой
      */
-    String generateUniqueNumber();
-
-    /**
-     * Получение текущих даты и времени.
-     *
-     * @return дата и время
-     */
-    Date getCurrentDateTime();
+    OrderNumberDto getOrderData();
 }

@@ -1,5 +1,6 @@
 package com.order.service.impl;
 
+import com.order.openapi.model.OrderNumberDto;
 import com.order.service.NumberGenerateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +21,17 @@ public class NumberGenerateServiceImpl implements NumberGenerateService {
 
     private final RedisTemplate<String, String> redisTemplate;
 
+    @Override
+    public OrderNumberDto getOrderData() {
+        return new OrderNumberDto(generateUniqueNumber(), getCurrentDateTime().toLocalDate());
+    }
+
     /**
      * Генерация номера заказа.
      *
      * @return id созданного заказа
      */
-    @Override
-    public String generateUniqueNumber() {
+    private String generateUniqueNumber() {
 
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
@@ -47,8 +52,7 @@ public class NumberGenerateServiceImpl implements NumberGenerateService {
      *
      * @return дата и время
      */
-    @Override
-    public Date getCurrentDateTime() {
+    private Date getCurrentDateTime() {
         return Date.valueOf(LocalDate.now());
     }
 }

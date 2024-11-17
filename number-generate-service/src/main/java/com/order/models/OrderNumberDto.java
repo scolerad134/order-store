@@ -2,7 +2,6 @@ package com.order.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.sql.Date;
 
@@ -11,7 +10,7 @@ import java.sql.Date;
  */
 @Data
 @AllArgsConstructor
-public class OrderNumber {
+public class OrderNumberDto {
     /**
      * Номер заказа.
      */
