@@ -2,6 +2,9 @@ package com.order.repository;
 
 import com.order.models.entity.Order;
 
+import java.sql.Date;
+import java.util.List;
+
 /**
  * Репозиторий для работы с Order.
  */
@@ -23,4 +26,14 @@ public interface OrderRepository {
      *
      */
     Order findOrderById(Long id);
+
+    /**
+     * Получение заказов по дате и минимальной сумме.
+     *
+     * @param date дата создания заказа
+     * @param minAmount минимальная сумма заказа.
+     *
+     * @return order заказ
+     */
+    List<Order> findByDateAndMinAmount(Date date, Double minAmount);
 }

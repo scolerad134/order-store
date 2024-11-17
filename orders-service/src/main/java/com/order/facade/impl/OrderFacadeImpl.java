@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -71,6 +72,22 @@ public class OrderFacadeImpl implements OrderFacade {
         Order order = orderService.findOrderById(id);
         log.debug("getOrderById - end, order = {}", order);
         return order;
+    }
+
+    /**
+     * Получение заказов по дате и минимальной сумме.
+     *
+     * @param date дата создания заказа
+     * @param minAmount минимальная сумма заказа.
+     *
+     * @return order заказ
+     */
+    @Override
+    public List<Order> getOrdersByDateAndAmount(Date date, Double minAmount) {
+        log.debug("getOrdersByDateAndAmount - start, date = {}, minAmount = {}", date, minAmount);
+        List<Order> orderList = orderService.findByDateAndMinAmount(date, minAmount);
+        log.debug("getOrdersByDateAndAmount - end, date = {}, minAmount = {}", date, minAmount);
+        return orderList;
     }
 
     /**

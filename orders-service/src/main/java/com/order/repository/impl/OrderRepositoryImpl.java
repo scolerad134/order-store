@@ -11,7 +11,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import com.order.repository.OrderRepository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.util.List;
 
 /**
  * Реализация {@link OrderRepository}.
@@ -83,5 +85,32 @@ public class OrderRepositoryImpl implements OrderRepository {
             log.warn("Order with id = {} not found", id);
             throw new OrderNotFoundException("Order with id = " + id + " not found");
         }
+    }
+
+    /**
+     * Получение заказов по дате и минимальной сумме.
+     *
+     * @param date дата создания заказа
+     * @param minAmount минимальная сумма заказа.
+     *
+     * @return order заказ
+     */
+    @Override
+    public List<Order> findByDateAndMinAmount(Date date, Double minAmount) {
+        log.info("Get list of orders by date = {} and minAmount = {}", date, minAmount);
+        String sql = "SELECT * FROM orders WHERE order_date = ? AND total_amount > ?";
+
+        return jdbcTemplate.query(sql, new Object[]{date, minAmount}, (rs, rowNum) -> {
+            Order order = new Order();
+            order.setId(rs.getLong("id"));
+            order.setOrderNumber(rs.getString("order_number"));
+            order.setTotalAmount(rs.getDouble("total_amount"));
+            order.setOrderDate(rs.getDate("order_date"));
+            order.setRecipient(rs.getString("recipient"));
+            order.setDeliveryAddress(rs.getString("delivery_address"));
+            order.setPaymentType(rs.getString("payment_type"));
+            order.setDeliveryType(rs.getString("delivery_type"));
+            return order;
+        });
     }
 }

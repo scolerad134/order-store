@@ -5,13 +5,19 @@ import com.order.facade.OrderFacade;
 import com.order.models.entity.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Контроллер для работы с маппингом "/orders".
@@ -32,7 +38,7 @@ public class OrdersController {
      *
      * @return id созданного заказа
      */
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<String> createOrder(@RequestBody OrderDto orderDto) {
         log.debug("POST-request, createOrder - start, order = {}", orderDto);
         orderFacade.createOrder(orderDto);
@@ -54,4 +60,20 @@ public class OrdersController {
         log.debug("GET-request, getOrderById - end, order = {}", order);
         return ResponseEntity.ok(order);
     }
+
+    /**
+     * Получение заказов по дате и минимальной сумме.
+     *
+     * @param date дата создания заказа
+     * @param minAmount минимальная сумма заказа.
+     *
+     * @return order заказ
+     */
+    @GetMapping
+    public ResponseEntity<List<Order>> getOrdersByDateAndAmount(
+        @RequestParam Date date,
+        @RequestParam(value = "minAmount", required = false) Double minAmount) {
+        return ResponseEntity.ok(orderFacade.getOrdersByDateAndAmount(date, minAmount));
+    }
+
 }

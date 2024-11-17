@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.util.List;
+
 /**
  * Реализация {@link OrderService}.
  */
@@ -46,5 +49,21 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findOrderById(id);
         log.debug("findOrderById - end, order = {}", order);
         return order;
+    }
+
+    /**
+     * Получение заказов по дате и минимальной сумме.
+     *
+     * @param date дата создания заказа
+     * @param minAmount минимальная сумма заказа.
+     *
+     * @return order заказ
+     */
+    @Override
+    public List<Order> findByDateAndMinAmount(Date date, Double minAmount) {
+        log.debug("findOrderById - start, date = {}, minAmount = {}", date, minAmount);
+        List<Order> orderList = orderRepository.findByDateAndMinAmount(date, minAmount);
+        log.debug("findOrderById - end, date = {}, minAmount = {}", date, minAmount);
+        return orderList;
     }
 }
