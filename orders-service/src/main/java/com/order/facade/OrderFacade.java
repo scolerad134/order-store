@@ -1,7 +1,7 @@
 package com.order.facade;
 
 import com.order.models.dtos.OrderDto;
-
+import com.order.models.entity.Order;
 
 /**
  * Фасад для работы с заказами.
@@ -15,4 +15,14 @@ public interface OrderFacade {
      *
      */
     void createOrder(OrderDto orderDto);
+
+    /**
+     * Получение заказа.
+     *
+     * @param id идентификатор заказа
+     *
+     * @return order заказ
+     *
+     */
+    Order getOrderById(Long id);
 }

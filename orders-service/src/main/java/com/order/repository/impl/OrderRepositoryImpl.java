@@ -1,15 +1,16 @@
 package com.order.repository.impl;
 
+import com.order.util.exception.OrderNotFoundException;
 import com.order.models.entity.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import com.order.repository.OrderRepository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 
 /**
@@ -53,4 +54,34 @@ public class OrderRepositoryImpl implements OrderRepository {
         return keyHolder.getKey().longValue();
     }
 
+    /**
+     * Получение заказа.
+     *
+     * @param id идентификатор заказа
+     * @return order заказ
+     *
+     */
+    @Override
+    public Order findOrderById(Long id) {
+        log.info("Get order by id = {}", id);
+        String sql = "SELECT * FROM orders WHERE id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
+                Order order = new Order();
+                order.setId(rs.getLong("id"));
+                order.setOrderNumber(rs.getString("order_number"));
+                order.setTotalAmount(rs.getDouble("total_amount"));
+                order.setOrderDate(rs.getDate("order_date"));
+                order.setRecipient(rs.getString("recipient"));
+                order.setDeliveryAddress(rs.getString("delivery_address"));
+                order.setPaymentType(rs.getString("payment_type"));
+                order.setDeliveryType(rs.getString("delivery_type"));
+                return order;
+            });
+        } catch (EmptyResultDataAccessException e) {
+            log.warn("Order with id = {} not found", id);
+            throw new OrderNotFoundException("Order with id = " + id + " not found");
+        }
+    }
 }

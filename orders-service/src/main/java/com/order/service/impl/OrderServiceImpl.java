@@ -31,4 +31,20 @@ public class OrderServiceImpl implements OrderService {
         log.debug("saveOrder - end, with orderId = {}", orderId);
         return orderId;
     }
+
+    /**
+     * Получение заказа.
+     *
+     * @param id идентификатор заказа
+     *
+     * @return order заказ
+     *
+     */
+    @Override
+    public Order findOrderById(Long id) {
+        log.debug("findOrderById - start, id = {}", id);
+        Order order = orderRepository.findOrderById(id);
+        log.debug("findOrderById - end, order = {}", order);
+        return order;
+    }
 }

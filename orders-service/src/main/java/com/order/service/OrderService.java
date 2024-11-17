@@ -16,4 +16,14 @@ public interface OrderService {
      * @return id созданного заказа
      */
     Long saveOrder(Order order);
+
+    /**
+     * Получение заказа.
+     *
+     * @param id идентификатор заказа
+     *
+     * @return order заказ
+     *
+     */
+    Order findOrderById(Long id);
 }

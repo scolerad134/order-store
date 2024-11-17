@@ -58,6 +58,22 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     /**
+     * Получение заказа.
+     *
+     * @param id идентификатор заказа
+     *
+     * @return order заказ
+     *
+     */
+    @Override
+    public Order getOrderById(Long id) {
+        log.debug("getOrderById - start, id = {}", id);
+        Order order = orderService.findOrderById(id);
+        log.debug("getOrderById - end, order = {}", order);
+        return order;
+    }
+
+    /**
      * Маппинг из OrderDto в Order.
      *
      * @param orderDto входные параметры с информацией о заказе
