@@ -113,4 +113,36 @@ public class OrderRepositoryImpl implements OrderRepository {
             return order;
         });
     }
+
+    /**
+     * Получение заказов не содержащих заданный товар и поступивших в заданный временной
+     * период.
+     *
+     * @param productName название товара
+     * @param startDate, начало временного диапазона
+     * @param endDate конец временного диапазона
+     *
+     * @return order заказ
+     */
+    @Override
+    public List<Order> findByExcludingProduct(String productName, Date startDate, Date endDate) {
+        log.info("Get list of orders by exclude productName = {}", productName);
+        String sql = "SELECT * FROM orders INNER JOIN order_details " +
+            "ON orders.id = order_details.order_id " +
+            "WHERE order_details.product_name != ? " +
+            "AND orders.order_date BETWEEN ? AND ?";
+
+        return jdbcTemplate.query(sql, new Object[]{productName, startDate, endDate}, (rs, rowNum) -> {
+            Order order = new Order();
+            order.setId(rs.getLong("id"));
+            order.setOrderNumber(rs.getString("order_number"));
+            order.setTotalAmount(rs.getDouble("total_amount"));
+            order.setOrderDate(rs.getDate("order_date"));
+            order.setRecipient(rs.getString("recipient"));
+            order.setDeliveryAddress(rs.getString("delivery_address"));
+            order.setPaymentType(rs.getString("payment_type"));
+            order.setDeliveryType(rs.getString("delivery_type"));
+            return order;
+        });
+    }
 }

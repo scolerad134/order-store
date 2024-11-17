@@ -36,4 +36,16 @@ public interface OrderRepository {
      * @return order заказ
      */
     List<Order> findByDateAndMinAmount(Date date, Double minAmount);
+
+    /**
+     * Получение заказов не содержащих заданный товар и поступивших в заданный временной
+     * период.
+     *
+     * @param productName название товара
+     * @param startDate, начало временного диапазона
+     * @param endDate конец временного диапазона
+     *
+     * @return order заказ
+     */
+    List<Order> findByExcludingProduct(String productName, Date startDate, Date endDate);
 }

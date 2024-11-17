@@ -2,6 +2,7 @@ package com.order.facade;
 
 import com.order.models.dtos.OrderDto;
 import com.order.models.entity.Order;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
 import java.util.List;
@@ -38,4 +39,16 @@ public interface OrderFacade {
      * @return order заказ
      */
     List<Order> getOrdersByDateAndAmount(Date date, Double minAmount);
+
+    /**
+     * Получение заказов не содержащих заданный товар и поступивших в заданный временной
+     * период.
+     *
+     * @param productName название товара
+     * @param startDate, начало временного диапазона
+     * @param endDate конец временного диапазона
+     *
+     * @return order заказ
+     */
+    List<Order> getOrdersExcludingProduct(String productName, Date startDate, Date endDate);
 }

@@ -66,4 +66,27 @@ public class OrderServiceImpl implements OrderService {
         log.debug("findOrderById - end, date = {}, minAmount = {}", date, minAmount);
         return orderList;
     }
+
+    /**
+     * Получение заказов не содержащих заданный товар и поступивших в заданный временной
+     * период.
+     *
+     * @param productName название товара
+     * @param startDate, начало временного диапазона
+     * @param endDate конец временного диапазона
+     *
+     * @return order заказ
+     */
+    @Override
+    public List<Order> findByExcludingProduct(String productName, Date startDate, Date endDate) {
+        log.debug("findByExcludingProduct - start, productName = {}, minAmount = {}, endDate = {}",
+            productName, startDate, endDate);
+
+        List<Order> orderList = orderRepository.findByExcludingProduct(productName, startDate, endDate);
+
+        log.debug("findByExcludingProduct - end, productName = {}, minAmount = {}, endDate = {}",
+            productName, startDate, endDate);
+
+        return orderList;
+    }
 }

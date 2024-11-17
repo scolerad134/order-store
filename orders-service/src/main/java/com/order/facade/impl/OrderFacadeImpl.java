@@ -91,6 +91,29 @@ public class OrderFacadeImpl implements OrderFacade {
     }
 
     /**
+     * Получение заказов не содержащих заданный товар и поступивших в заданный временной
+     * период.
+     *
+     * @param productName название товара
+     * @param startDate, начало временного диапазона
+     * @param endDate конец временного диапазона
+     *
+     * @return order заказ
+     */
+    @Override
+    public List<Order> getOrdersExcludingProduct(String productName, Date startDate, Date endDate) {
+        log.debug("getOrdersExcludingProduct - start, productName = {}, minAmount = {}, endDate = {}",
+            productName, startDate, endDate);
+
+        List<Order> orderList = orderService.findByExcludingProduct(productName, startDate, endDate);
+
+        log.debug("getOrdersExcludingProduct - end, productName = {}, minAmount = {}, endDate = {}",
+            productName, startDate, endDate);
+
+        return orderList;
+    }
+
+    /**
      * Маппинг из OrderDto в Order.
      *
      * @param orderDto входные параметры с информацией о заказе

@@ -73,7 +73,33 @@ public class OrdersController {
     public ResponseEntity<List<Order>> getOrdersByDateAndAmount(
         @RequestParam Date date,
         @RequestParam(value = "minAmount", required = false) Double minAmount) {
-        return ResponseEntity.ok(orderFacade.getOrdersByDateAndAmount(date, minAmount));
+        log.debug("GET-request, getOrdersByDateAndAmount - start, date = {}, minAmount = {}", date, minAmount);
+        List<Order> orderList = orderFacade.getOrdersByDateAndAmount(date, minAmount);
+        log.debug("GET-request, getOrdersByDateAndAmount - end, date = {}, minAmount = {}", date, minAmount);
+        return ResponseEntity.ok(orderList);
+    }
+
+    /**
+     * Получение заказов не содержащих заданный товар и поступивших в заданный временной
+     * период.
+     *
+     * @param productName название товара
+     * @param startDate, начало временного диапазона
+     * @param endDate конец временного диапазона
+     *
+     * @return order заказ
+     */
+    @GetMapping("/exclude")
+    public ResponseEntity<List<Order>> getOrdersExcludingProduct(
+        @RequestParam("productName") String productName,
+        @RequestParam("startDate") Date startDate,
+        @RequestParam("endDate") Date endDate) {
+        log.debug("GET-request, getOrdersExcludingProduct - start, productName = {}, minAmount = {}, endDate = {}",
+            productName, startDate, endDate);
+        List<Order> orderList = orderFacade.getOrdersExcludingProduct(productName, startDate, endDate);
+        log.debug("GET-request, getOrdersExcludingProduct - start, productName = {}, minAmount = {}, endDate = {}",
+            productName, startDate, endDate);
+        return ResponseEntity.ok(orderList);
     }
 
 }
