@@ -18,7 +18,6 @@ import java.util.UUID;
 @Slf4j
 public class NumberGenerateServiceImpl implements NumberGenerateService {
 
-    private static final String REDIS_KEY = "order-numbers";
     private final RedisTemplate<String, String> redisTemplate;
 
     /**
@@ -37,7 +36,7 @@ public class NumberGenerateServiceImpl implements NumberGenerateService {
             return generateUniqueNumber();
         }
 
-        redisTemplate.opsForSet().add(uniqueNumber, UUID.randomUUID().toString());
+        redisTemplate.opsForValue().set(uniqueNumber, UUID.randomUUID().toString());
 
         return uniqueNumber;
     }
