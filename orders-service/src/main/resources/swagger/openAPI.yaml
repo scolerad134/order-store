@@ -1,0 +1,305 @@
+openapi: 3.0.3
+info:
+  title: Order API
+  version: 1.0.0
+  description: API для управления заказами.
+
+paths:
+  /api/v1/orders:
+    post:
+      summary: Создать новый заказ
+      description: Создаёт новый заказ с переданными данными.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderInfoDto'
+            examples:
+              example1:
+                summary: Пример запроса
+                value:
+                  recipient: "John Doe"
+                  deliveryAddress: "123 Elm Street"
+                  paymentType: "Credit Card"
+                  deliveryType: "Home Delivery"
+                  orderDate: "2024-11-17"
+                  totalAmount: 200.50
+      responses:
+        '200':
+          description: Заказ успешно создан
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "The order was successfully created"
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+    get:
+      summary: Получение заказов по дате и минимальной сумме
+      description: Возвращает список заказов, созданных в указанную дату, с общей суммой больше минимальной.
+      parameters:
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2024-11-17"
+        - name: minAmount
+          in: query
+          required: false
+          schema:
+            type: number
+          description: Минимальная сумма заказа. Если не указано, вернутся все заказы за указанную дату.
+          example: 100.0
+      responses:
+        '200':
+          description: Список заказов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+
+  /api/v1/orders/{id}:
+    get:
+      summary: Получить заказ по ID
+      description: Возвращает информацию о заказе по указанному идентификатору.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Идентификатор заказа. Должен быть числом, уникальным для каждого заказа.
+          example: 123
+      responses:
+        '200':
+          description: Заказ найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDto'
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+
+  /api/v1/orders/exclude:
+    get:
+      summary: Получение заказов, не содержащих заданный товар
+      description: Возвращает список заказов, не содержащих указанный товар, за заданный временной период.
+      parameters:
+        - name: productName
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Название товара, который должен быть исключён из заказов.
+          example: "Laptop"
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2024-11-01"
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: "2024-11-17"
+      responses:
+        '200':
+          description: Список заказов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorDto"
+components:
+  schemas:
+    ErrorDto:
+      type: object
+      description: Сообщение об ошибке
+      properties:
+        errorCode:
+          type: integer
+          description: HTTP код
+          format: int32
+        errorMessage:
+          type: string
+          description: Сообщение
+        timestamp:
+          type: string
+          format: date-time
+          description: Время
+    OrderInfoDto:
+      type: object
+      properties:
+        recipient:
+          type: string
+          description: Имя получателя.
+          example: "John Doe"
+        deliveryAddress:
+          type: string
+          description: Адрес доставки.
+          example: "123 Elm Street"
+        paymentType:
+          type: string
+          description: Тип оплаты.
+          example: "Credit Card"
+        deliveryType:
+          type: string
+          description: Тип доставки.
+          example: "Home Delivery"
+        productCode:
+          type: integer
+          description: Уникальный код продукта.
+          example: 1001
+        productName:
+          type: string
+          description: Название продукта.
+          example: "Laptop"
+        quantity:
+          type: integer
+          description: Количество единиц продукта.
+          example: 2
+        unitPrice:
+          type: number
+          format: double
+          description: Цена за единицу продукта.
+          example: 750.99
+      required:
+        - recipient
+        - deliveryAddress
+        - paymentType
+        - deliveryType
+        - productCode
+        - productName
+        - quantity
+        - unitPrice
+    OrderDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "Идентификатор заказа"
+          format: int64
+          example: 123
+        orderNumber:
+          type: string
+          description: Номер заказа.
+        totalAmount:
+          type: number
+          description: Общая сумма заказа.
+        orderDate:
+          type: string
+          format: date
+          description: Дата заказа.
+        recipient:
+          type: string
+          description: Имя получателя.
+        deliveryAddress:
+          type: string
+          description: Адрес доставки.
+        paymentType:
+          type: string
+          description: Тип оплаты.
+        deliveryType:
+          type: string
+          description: Тип доставки.
+      required:
+        - id
+        - orderNumber
+        - totalAmount
+        - orderDate
+        - recipient
+        - deliveryAddress
+        - paymentType
+        - deliveryType
+    OrderNumberDto:
+      type: object
+      description: Класс представляет собой номер заказа в системе.
+      properties:
+        number:
+          type: string
+          description: Номер заказа.
+        date:
+          type: string
+          format: date
+          description: Текущая дата.
+      required:
+        - number
+        - date

@@ -1,8 +1,8 @@
 package com.order.facade;
 
-import com.order.models.dtos.OrderDto;
+import com.order.openapi.model.OrderDto;
+import com.order.openapi.model.OrderInfoDto;
 import com.order.models.entity.Order;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface OrderFacade {
      * @param orderDto входные параметры для создания заказа
      *
      */
-    void createOrder(OrderDto orderDto);
+    void createOrder(OrderInfoDto orderDto);
 
     /**
      * Получение заказа.
@@ -28,7 +28,7 @@ public interface OrderFacade {
      * @return order заказ
      *
      */
-    Order getOrderById(Long id);
+    OrderDto getOrderById(Long id);
 
     /**
      * Получение заказов по дате и минимальной сумме.
@@ -38,7 +38,7 @@ public interface OrderFacade {
      *
      * @return order заказ
      */
-    List<Order> getOrdersByDateAndAmount(Date date, Double minAmount);
+    List<OrderDto> getOrdersByDateAndAmount(Date date, Double minAmount);
 
     /**
      * Получение заказов не содержащих заданный товар и поступивших в заданный временной
@@ -50,5 +50,5 @@ public interface OrderFacade {
      *
      * @return order заказ
      */
-    List<Order> getOrdersExcludingProduct(String productName, Date startDate, Date endDate);
+    List<OrderDto> getOrdersExcludingProduct(String productName, Date startDate, Date endDate);
 }

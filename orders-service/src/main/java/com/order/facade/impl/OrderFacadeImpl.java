@@ -1,8 +1,10 @@
 package com.order.facade.impl;
 
 import com.order.facade.OrderFacade;
-import com.order.models.dtos.OrderDto;
-import com.order.models.dtos.OrderNumber;
+import com.order.mapper.OrderMapper;
+import com.order.openapi.model.OrderDto;
+import com.order.openapi.model.OrderInfoDto;
+import com.order.openapi.model.OrderNumberDto;
 import com.order.models.entity.Order;
 import com.order.models.entity.OrderDetails;
 import com.order.service.OrderDetailsService;
@@ -15,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Реализация интерфейса OrderFacade.
@@ -27,9 +27,9 @@ import java.util.UUID;
 @Slf4j
 public class OrderFacadeImpl implements OrderFacade {
 
-    // private final OrderMapper orderMapper;
-
     private final RestTemplate restTemplate;
+
+    private final OrderMapper orderMapper;
 
     @Value("${number-generate-service.url}")
     private String numberGenerateServiceUrl;
@@ -46,14 +46,14 @@ public class OrderFacadeImpl implements OrderFacade {
      */
     @Override
     @Transactional
-    public void createOrder(OrderDto orderDto) {
+    public void createOrder(OrderInfoDto orderDto) {
         log.debug("createOrder - start, orderDto = {}", orderDto);
-        Order order = toOrder(orderDto);
-        OrderNumber orderNumber = restTemplate.getForObject(numberGenerateServiceUrl, OrderNumber.class);
+        Order order = orderMapper.toOrder(orderDto);
+        OrderNumberDto orderNumber = restTemplate.getForObject(numberGenerateServiceUrl, OrderNumberDto.class);
         order.setOrderNumber(orderNumber.getNumber());
-        order.setOrderDate(orderNumber.getDate());
+        order.setOrderDate(Date.valueOf(orderNumber.getDate()));
         Long orderId = orderService.saveOrder(order);
-        OrderDetails orderDetails = toOrderDetails(orderDto);
+        OrderDetails orderDetails = orderMapper.toOrderDetails(orderDto);
         orderDetails.setOrderId(orderId);
         orderDetailsService.saveOrderDetails(orderDetails);
     }
@@ -67,11 +67,11 @@ public class OrderFacadeImpl implements OrderFacade {
      *
      */
     @Override
-    public Order getOrderById(Long id) {
+    public OrderDto getOrderById(Long id) {
         log.debug("getOrderById - start, id = {}", id);
         Order order = orderService.findOrderById(id);
         log.debug("getOrderById - end, order = {}", order);
-        return order;
+        return orderMapper.toOrderDto(order);
     }
 
     /**
@@ -83,11 +83,11 @@ public class OrderFacadeImpl implements OrderFacade {
      * @return order заказ
      */
     @Override
-    public List<Order> getOrdersByDateAndAmount(Date date, Double minAmount) {
+    public List<OrderDto> getOrdersByDateAndAmount(Date date, Double minAmount) {
         log.debug("getOrdersByDateAndAmount - start, date = {}, minAmount = {}", date, minAmount);
         List<Order> orderList = orderService.findByDateAndMinAmount(date, minAmount);
         log.debug("getOrdersByDateAndAmount - end, date = {}, minAmount = {}", date, minAmount);
-        return orderList;
+        return orderMapper.toOrderDtoList(orderList);
     }
 
     /**
@@ -101,7 +101,7 @@ public class OrderFacadeImpl implements OrderFacade {
      * @return order заказ
      */
     @Override
-    public List<Order> getOrdersExcludingProduct(String productName, Date startDate, Date endDate) {
+    public List<OrderDto> getOrdersExcludingProduct(String productName, Date startDate, Date endDate) {
         log.debug("getOrdersExcludingProduct - start, productName = {}, minAmount = {}, endDate = {}",
             productName, startDate, endDate);
 
@@ -110,49 +110,7 @@ public class OrderFacadeImpl implements OrderFacade {
         log.debug("getOrdersExcludingProduct - end, productName = {}, minAmount = {}, endDate = {}",
             productName, startDate, endDate);
 
-        return orderList;
+        return orderMapper.toOrderDtoList(orderList);
     }
 
-    /**
-     * Маппинг из OrderDto в Order.
-     *
-     * @param orderDto входные параметры с информацией о заказе
-     * @return order заказ
-     */
-    private Order toOrder(OrderDto orderDto) {
-        if ( orderDto == null ) {
-            return null;
-        }
-
-        Order order = new Order();
-
-        order.setTotalAmount(orderDto.quantity() * orderDto.unitPrice());
-        order.setRecipient(orderDto.recipient());
-        order.setDeliveryAddress(orderDto.deliveryAddress());
-        order.setPaymentType(orderDto.paymentType());
-        order.setDeliveryType(orderDto.deliveryType());
-
-        return order;
-    }
-
-    /**
-     * Маппинг из OrderDto в OrderDetails.
-     *
-     * @param orderDto входные параметры с информацией о заказе
-     * @return orderDetails детали заказа
-     */
-    private OrderDetails toOrderDetails(OrderDto orderDto) {
-        if ( orderDto == null ) {
-            return null;
-        }
-
-        OrderDetails orderDetails = new OrderDetails();
-
-        orderDetails.setProductCode(orderDto.productCode());
-        orderDetails.setProductName(orderDto.productName());
-        orderDetails.setQuantity(orderDto.quantity());
-        orderDetails.setUnitPrice(orderDto.unitPrice());
-
-        return orderDetails;
-    }
 }
