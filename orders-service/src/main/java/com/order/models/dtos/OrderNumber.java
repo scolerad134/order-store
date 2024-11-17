@@ -3,7 +3,7 @@ package com.order.models.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Класс представляет собой номер заказов в системе.

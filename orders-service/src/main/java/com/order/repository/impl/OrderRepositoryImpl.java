@@ -11,7 +11,6 @@ import com.order.repository.OrderRepository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.util.Objects;
 
 /**
  * Реализация {@link OrderRepository}.
@@ -43,7 +42,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, String.valueOf(order.getOrderNumber()));
             ps.setDouble(2, order.getTotalAmount());
-            ps.setDate(3, Date.valueOf(String.valueOf(order.getOrderDate())));
+            ps.setDate(3, order.getOrderDate());
             ps.setString(4, order.getRecipient());
             ps.setString(5, order.getDeliveryAddress());
             ps.setString(6, order.getPaymentType());

@@ -33,13 +33,11 @@ public class NumberGenerateServiceImpl implements NumberGenerateService {
 
         String uniqueNumber = uuid.substring(0, 5).toUpperCase();
 
-        Boolean isMember = redisTemplate.opsForSet().isMember(REDIS_KEY, uniqueNumber);
-
-        if (Boolean.TRUE.equals(isMember)) {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(uniqueNumber))) {
             return generateUniqueNumber();
         }
 
-        redisTemplate.opsForSet().add(REDIS_KEY, uniqueNumber);
+        redisTemplate.opsForSet().add(uniqueNumber, UUID.randomUUID().toString());
 
         return uniqueNumber;
     }
