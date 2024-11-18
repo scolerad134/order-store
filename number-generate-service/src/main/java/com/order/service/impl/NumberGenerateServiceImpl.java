@@ -31,7 +31,7 @@ public class NumberGenerateServiceImpl implements NumberGenerateService {
      *
      * @return id созданного заказа
      */
-    private String generateUniqueNumber() {
+    public String generateUniqueNumber() {
 
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 
@@ -52,7 +52,7 @@ public class NumberGenerateServiceImpl implements NumberGenerateService {
      *
      * @return дата и время
      */
-    private Date getCurrentDateTime() {
+    public Date getCurrentDateTime() {
         return Date.valueOf(LocalDate.now());
     }
 }
