@@ -2,7 +2,6 @@ package com.order.facade;
 
 import com.order.openapi.model.OrderDto;
 import com.order.openapi.model.OrderInfoDto;
-import com.order.models.entity.Order;
 
 import java.sql.Date;
 import java.util.List;

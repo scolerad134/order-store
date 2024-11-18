@@ -6,6 +6,7 @@ import com.order.openapi.model.OrderDto;
 import com.order.openapi.api.ApiApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +29,14 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/orders")
-public class OrdersController implements ApiApi {
+public class OrderController implements ApiApi {
 
     private final OrderFacade orderFacade;
 
     @Operation(summary = "Создать новый заказ", description = "Создаёт новый заказ с переданными данными.")
     @PostMapping
     public ResponseEntity<String> createOrder(
+        @Valid
         @RequestBody
         @Parameter(
             description = "Объект с данными для создания заказа. Включает информацию о получателе, адресе доставки, типе оплаты и других параметрах.",

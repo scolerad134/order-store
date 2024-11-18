@@ -1,7 +1,6 @@
 package com.order.repository;
 
-import com.order.models.entity.Order;
-import com.order.models.entity.OrderDetails;
+import com.order.models.OrderDetails;
 
 /**
  * Репозиторий для работы с OrderDetails.

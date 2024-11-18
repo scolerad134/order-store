@@ -212,10 +212,12 @@ components:
           type: string
           description: Имя получателя.
           example: "John Doe"
+          nullable: false
         deliveryAddress:
           type: string
           description: Адрес доставки.
           example: "123 Elm Street"
+          nullable: false
         paymentType:
           type: string
           description: Тип оплаты.

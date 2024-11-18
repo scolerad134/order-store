@@ -1,6 +1,6 @@
 package com.order.repository.impl;
 
-import com.order.models.entity.OrderDetails;
+import com.order.models.OrderDetails;
 import com.order.repository.OrderDetailsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.order.models.entity;
+package com.order.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

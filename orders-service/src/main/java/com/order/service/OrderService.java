@@ -1,7 +1,7 @@
 package com.order.service;
 
 
-import com.order.models.entity.Order;
+import com.order.models.Order;
 
 import java.sql.Date;
 import java.util.List;

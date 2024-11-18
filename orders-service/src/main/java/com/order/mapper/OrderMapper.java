@@ -1,11 +1,10 @@
 package com.order.mapper;
 
-import com.order.models.entity.Order;
-import com.order.models.entity.OrderDetails;
+import com.order.models.Order;
+import com.order.models.OrderDetails;
 import com.order.openapi.model.OrderDto;
 import com.order.openapi.model.OrderInfoDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.order.service;
 
-import com.order.models.entity.OrderDetails;
+import com.order.models.OrderDetails;
 
 /**
  * API сервиса для работы с {@link OrderDetails}.

@@ -1,6 +1,6 @@
 package com.order.service.impl;
 
-import com.order.models.entity.Order;
+import com.order.models.Order;
 import com.order.repository.OrderRepository;
 import com.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
