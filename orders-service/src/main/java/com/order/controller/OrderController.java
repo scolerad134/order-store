@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,6 +34,7 @@ public class OrderController implements ApiApi {
 
     private final OrderFacade orderFacade;
 
+    @Override
     @Operation(summary = "Создать новый заказ", description = "Создаёт новый заказ с переданными данными.")
     @PostMapping
     public ResponseEntity<String> createOrder(
@@ -48,6 +50,7 @@ public class OrderController implements ApiApi {
         return ResponseEntity.ok("The order was successfully created");
     }
 
+    @Override
     @Operation(summary = "Получить заказ по ID", description = "Возвращает информацию о заказе по указанному идентификатору.")
     @GetMapping("/{id}")
     public ResponseEntity<OrderDto> getOrderById(
@@ -63,6 +66,7 @@ public class OrderController implements ApiApi {
         return ResponseEntity.ok(order);
     }
 
+    @Override
     @Operation(
         summary = "Получение заказов по дате и минимальной сумме",
         description = "Возвращает список заказов, созданных в указанную дату, с общей суммой больше минимальной."
@@ -74,18 +78,19 @@ public class OrderController implements ApiApi {
             description = "Дата создания заказа (формат: yyyy-MM-dd)",
             example = "2024-11-17",
             required = true
-        ) Date date,
+        ) LocalDate date,
         @RequestParam(value = "minAmount", required = false)
         @Parameter(
             description = "Минимальная сумма заказа. Если не указано, вернутся все заказы за указанную дату.",
             example = "100.0"
         ) Double minAmount) {
         log.debug("GET-request, getOrdersByDateAndAmount - start, date = {}, minAmount = {}", date, minAmount);
-        List<OrderDto> orderList = orderFacade.getOrdersByDateAndAmount(date, minAmount);
+        List<OrderDto> orderList = orderFacade.getOrdersByDateAndAmount(Date.valueOf(date), minAmount);
         log.debug("GET-request, getOrdersByDateAndAmount - end, date = {}, minAmount = {}", date, minAmount);
         return ResponseEntity.ok(orderList);
     }
 
+    @Override
     @Operation(
         summary = "Получение заказов, не содержащих заданный товар",
         description = "Возвращает список заказов, не содержащих указанный товар, за заданный временной период."
@@ -103,16 +108,16 @@ public class OrderController implements ApiApi {
             description = "Начало временного диапазона (формат: yyyy-MM-dd)",
             example = "2024-11-01",
             required = true
-        ) Date startDate,
+        ) LocalDate startDate,
         @RequestParam("endDate")
         @Parameter(
             description = "Конец временного диапазона (формат: yyyy-MM-dd)",
             example = "2024-11-17",
             required = true
-        ) Date endDate) {
+        ) LocalDate endDate) {
         log.debug("GET-request, getOrdersExcludingProduct - start, productName = {}, minAmount = {}, endDate = {}",
             productName, startDate, endDate);
-        List<OrderDto> orderList = orderFacade.getOrdersExcludingProduct(productName, startDate, endDate);
+        List<OrderDto> orderList = orderFacade.getOrdersExcludingProduct(productName, Date.valueOf(startDate), Date.valueOf(endDate));
         log.debug("GET-request, getOrdersExcludingProduct - start, productName = {}, minAmount = {}, endDate = {}",
             productName, startDate, endDate);
         return ResponseEntity.ok(orderList);

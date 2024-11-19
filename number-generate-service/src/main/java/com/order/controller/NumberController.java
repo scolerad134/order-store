@@ -24,6 +24,7 @@ public class NumberController implements ApiApi {
 
     private final NumberGenerateService numberGenerateService;
 
+    @Override
     @Operation(
         summary = "Генерация номера заказа",
         description = "Генерирует уникальный номер заказа и возвращает его вместе с текущей датой."

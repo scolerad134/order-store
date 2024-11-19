@@ -9,6 +9,7 @@ paths:
     post:
       summary: Создать новый заказ
       description: Создаёт новый заказ с переданными данными.
+      operationId: createOrder
       requestBody:
         required: true
         content:
@@ -54,6 +55,7 @@ paths:
     get:
       summary: Получение заказов по дате и минимальной сумме
       description: Возвращает список заказов, созданных в указанную дату, с общей суммой больше минимальной.
+      operationId: getOrdersByDateAndAmount
       parameters:
         - name: date
           in: query
@@ -67,6 +69,7 @@ paths:
           required: false
           schema:
             type: number
+            format: double
           description: Минимальная сумма заказа. Если не указано, вернутся все заказы за указанную дату.
           example: 100.0
       responses:
@@ -101,12 +104,14 @@ paths:
     get:
       summary: Получить заказ по ID
       description: Возвращает информацию о заказе по указанному идентификатору.
+      operationId: getOrderById
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            format: int64
           description: Идентификатор заказа. Должен быть числом, уникальным для каждого заказа.
           example: 123
       responses:
@@ -139,6 +144,7 @@ paths:
     get:
       summary: Получение заказов, не содержащих заданный товар
       description: Возвращает список заказов, не содержащих указанный товар, за заданный временной период.
+      operationId: getOrdersExcludingProduct
       parameters:
         - name: productName
           in: query
