@@ -19,8 +19,6 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
-@Getter
-@Setter
 public class Order {
 
     /**
